@@ -53,7 +53,6 @@ function handleChange(event) {
 }
 input.addEventListener("keyup", handleChange);
 
-
 button.addEventListener("click", () => {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", `https://api.thecatapi.com/v1/images/search?limit=1&size=full`);
