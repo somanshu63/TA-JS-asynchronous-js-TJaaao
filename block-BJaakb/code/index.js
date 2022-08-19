@@ -43,35 +43,13 @@ function fetch(url) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url);
-        if(url.includes(search) && search != ""){
-            xhr.onload = function() {
-                setTimeout(() => {
-                    let userData = JSON.parse(xhr.response);
-                    resolve(userData);
-                    displayUI(userData.results);
-                });
-            };
-        }else{
-            xhr.onload = function() {
-                setTimeout(() => {
-                    let userData = JSON.parse(xhr.response);
-                    resolve(userData);
-                    displayUI(userData);
-                });
-            };
-        }
-        xhr.onerror = () => {
-            setTimeout(() => {
-                reject("something went wrong"), 5000
-            });
-        }
+        xhr.onload = () => resolve(JSON.parse(xhr.response));
+        xhr.onerror = () => reject("something went wrong");
         xhr.send();
     });
 }
 fetch("https://api.unsplash.com/photos/?client_id=Oq9K2jw5HKFVKkX9kdxF7tNDmX2jTwhu_MHlHJB_ZJo&per_page=100")
-.then((data) => {
-    console.log(data.name);
-})
+.then(displayUI)
 .catch((error) => {
     alert(`something went wrong`);
 });
@@ -80,7 +58,11 @@ fetch("https://api.unsplash.com/photos/?client_id=Oq9K2jw5HKFVKkX9kdxF7tNDmX2jTw
 function handleChange(event) {
     if(event.keyCode == 13){
         search = event.target.value;
-        fetch(`https://api.unsplash.com/search/photos?query=${search}&client_id=LP1r3vsN-jL9K-1AoGIm8hcbGM95W337bUaMTfaGby4&per_page=100`);
+        fetch(`https://api.unsplash.com/search/photos?query=${search}&client_id=LP1r3vsN-jL9K-1AoGIm8hcbGM95W337bUaMTfaGby4&per_page=100`)
+            .then((data) => {
+                displayUI(data.results);
+            })
+            .catch((error) => console.log(error));
         event.target.value = "";
     }
 }
