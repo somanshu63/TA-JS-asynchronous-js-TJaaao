@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>spaceflight news app</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/615eec2c8f.js" crossorigin="anonymous"></script>
+</head>
+<style>
+    body{
+    text-align: center;
+    width: 500px;
+    margin: 0 auto;
+    }
+    .flex{
+        display: flex;
+        justify-content: space-evenly;
+    }
+    .news-list{
+        text-align: left;
+
+    }
+    .news-article{
+        margin: 1rem;
+    }
+    .news-img{
+        width: 50%;
+        margin-right: 1rem;
+    }
+    .news-description{
+        width: 50%;
+    }
+    .news-category{
+        background-color: #367E7F;
+        border-radius: 14px;
+        padding: 8px;
+        color: white;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    .news-heading{
+        margin: -0.5rem 0 0.5rem 0;
+
+    }
+    .image{
+        width: 500px;
+        height: 200px;
+    }
+    .btn{
+        float: right;
+        background-color: black;
+        padding: 8px;
+        text-decoration: none;
+        text-transform: capitalize;
+        color: white;
+        font-size: 12px;
+    }
+</style>
+<body>
+<header>
+    <h1>News Search App</h1>
+</header>
+<main>
+    <div class="news">
+        <select id="newsc" name="news">
+            <option value="select a news source">select a news source</option>
+            <option value="NASA">NASA</option>
+            <option value="ARTECHINA">ARTECHINA</option>
+            <option value="TESLARATI">TESLARATI</option>
+            <option value="SPACE NEWS">SPACE NEWS</option>
+            <option value="NASA SPACEFLIGHT">NASA SPACEFLIGHT</option>
+            <option value="SPACEFLIGHT NOW">SPACEFLIGHT NOW</option>
+          </select>
+        <section class="news-list">
+            
+        </section>
+    </div>
+    <script src="./index.js"></script>
+</main>
+<footer>
+
+</footer>
+</body>
