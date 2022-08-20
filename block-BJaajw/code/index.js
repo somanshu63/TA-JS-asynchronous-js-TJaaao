@@ -3,14 +3,14 @@ const loading = document.createElement('img');
 
 function createBasicUI(search = "select a news source") {
     root.innerHTML = "";
+    loading.src = "file:///home/somanshu/Desktop/altcampus/JAVASCRIPT/TA-JS-asynchronous-js-TJaaao/block-BJaajw/code/loading.jpg";
+    loading.classList.add("image");
+    root.append(loading);
     fetch('https://api.spaceflightnewsapi.net/v3/articles?_limit=30')
     .then((res) => {
         if(!res.ok){
             throw new Error(`Error happened ${res.status}`);
         }
-        loading.src = "file:///home/somanshu/Desktop/altcampus/JAVASCRIPT/TA-JS-asynchronous-js-TJaaao/block-BJaajw/code/loading.jpg";
-        loading.classList.add("image");
-        root.append(loading);
         return  res.json();
     })
     .then((value) => {
