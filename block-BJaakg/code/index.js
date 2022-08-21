@@ -1,6 +1,7 @@
 let root = document.querySelector(".books");
 let root2 = document.querySelector(".characters-page");
-
+let loader = document.createElement("div");
+loader.classList.add("loader");
    
 
 function openCharactersList(arr){
@@ -19,6 +20,7 @@ function openCharactersList(arr){
     let charactersList = document.createElement("ul");
     root2.append(close, characterHeading, charactersList);
     arr.forEach((elem) => {
+        root2.append(loader);
         fetch(elem)
         .then((res) => res.json())
         .then((data) => {
@@ -27,6 +29,10 @@ function openCharactersList(arr){
                 characters.innerText = `${elm} : ()`;
                 charactersList.append(characters);
             });
+        })
+        .catch((err) => root2.innerText = err)
+        .finally(() =>  {
+            loader.remove();
         });
     });
 }
@@ -50,9 +56,16 @@ function createUI(data) {
 }
 
 
-let data = fetch('https://www.anapioficeandfire.com/api/books')
+function fetchurl() {
+    root.append(loader);
+    fetch('https://www.anapioficeandfire.com/api/books')
     .then((res) => res.json())
     .then((data) => {
         createUI(data);
-    });
+    })
+    .catch((err) => root.innerText = err)
+    .finally(() => loader.remove());
+}
+fetchurl();
+
 
