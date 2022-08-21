@@ -1,0 +1,72 @@
+body{
+    width: 500px;
+    text-align: center;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.books{
+    background-image: linear-gradient(to right, purple, blue);
+    display: grid;
+    grid-template-columns: repeat(2,250px);
+}
+h1{
+    padding: 2rem 0;
+    margin: 0;
+    background-image: linear-gradient(to right, purple, blue);
+
+}
+.books-list{
+    background-color: white;
+    border: 2px dotted pink;
+    margin: 0;
+    padding: 0;
+}
+h2{
+    padding: 1rem 0 1rem 0;
+    text-transform: capitalize;
+}
+cite{
+    display: block;
+    margin-bottom: 2rem;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+button{
+    background-color: black;
+    color: white;
+    outline: 0;
+    border: 0;
+    border-radius: 6px;
+    padding: 4px;
+    margin-bottom: 1rem;
+}
+li{
+    width: 82%;
+    border: 2px solid white;
+    color: white;
+    text-align: left;
+    padding: 1rem;
+    list-style: none;
+    margin: 0.5rem 0;
+}
+a{
+    float: right;
+    color: white;
+    text-decoration: none;
+    padding: 1rem;
+}
+a:hover{
+    color: black;
+}
+.characters-page{
+    background-color: #3B898A;
+    text-align: center;
+    padding-bottom: 2rem;
+    margin-top: -20px;
+    display: none;
+}
+.ch{
+    text-align: left;
+    padding: 2rem;
+}
