@@ -8,12 +8,17 @@ let Active = document.querySelector(".Active");
 let Completed = document.querySelector(".Completed");
 let baseURL = 'https://basic-todo-api.vercel.app/api/todo';
 var allTodos;
-let fetchtodo = fetch(baseURL)
-                .then((res) => res.json())
-                .then((data) => {
-                    allTodos = data.todos;
-                    createUI(allTodos, root);
-                });
+        
+function displayTodo() {
+    fetch(baseURL)
+    .then((res) => res.json())
+    .then((data) => {
+        allTodos = data.todos;
+        createUI(allTodos, root);
+    });
+}
+displayTodo();
+    
 
 
 controls.style.display = "none";
@@ -35,22 +40,14 @@ function handleInput(event){
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
+          })
+          .then(() => {
+            displayTodo();
           });
-          fetch(baseURL)
-                .then((res) => res.json())
-                .then((data) => {
-                    allTodos = data.todos;
-                });
         event.target.value = "";
-        createUI(allTodos, root);
     } 
     controls.style.display = "flex";
 
-    localStorage.setItem(
-        "todos", 
-        JSON.stringify(allTodos)
-    );
-    
     itemsLeft.children[0].innerText = allTodos.filter((todo) => todo.isCompleted == false).length;
     
     clearCompleted.addEventListener("click", handleClearCompleted);
@@ -81,95 +78,116 @@ function handleActive() {
 function handleCompleted() {
     let completedTodos = allTodos.filter((todo) => todo.isCompleted == true);
     createUI(completedTodos, root);
-
+    
 }
 
 function handleClearCompleted() {
     allTodos = allTodos.filter((todo) => todo.isCompleted == false);
-    localStorage.setItem(
-        "todos", 
-        JSON.stringify(allTodos)
-        );
-    createUI(allTodos, root);
+    let data = {
+        allTodos,
+    }
+    fetch(baseURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        displayTodo();
+      });
 }
 
-function handleDelete(event) {
-    let id = event.target.dataset.id;
-    allTodos.splice(id, 1);
-    fetch(baseURL + `/${allTodos[id]._id}`, {
+function handleDelete(id) {
+    fetch(baseURL + `/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
         }
+      })
+      .then(() => {
+        displayTodo();
       });
-      fetch(baseURL)
-                .then((res) => res.json())
-                .then((data) => {
-                    allTodos = data.todos;
-                });
-    localStorage.setItem(
-        "todos", 
-        JSON.stringify(allTodos)
-        );
-        createUI(allTodos, root);
-        itemsLeft.children[0].innerText = allTodos.filter((todo) => todo.isCompleted == false).length;
 
-
+    itemsLeft.children[0].innerText = allTodos.filter((todo) => todo.isCompleted == false).length;
 }
- function handleToggle(event) {
-    let id = event.target.dataset.id;
-    let check;
-    if(allTodos[id].isCompleted == true){
-        check = false;
-    }else{
-        check = true;
-    }
-    allTodos[id].isCompleted = !allTodos[id].isCompleted;
+
+
+ function handleToggle(id, status) {
     let data = {
         todo: {
-            isCompleted : check,
+            isCompleted : !status,
         },
     }
-    fetch(baseURL + `/${allTodos[id]._id}`, {
+    fetch(baseURL + `/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
+      })
+      .then(() => {
+        displayTodo();
       });
-      fetch(baseURL)
-                .then((res) => res.json())
-                .then((data) => {
-                    allTodos = data.todos;
-                });
-    localStorage.setItem(
-        "todos", 
-        JSON.stringify(allTodos)
-        );
-        createUI(allTodos, root);
         itemsLeft.children[0].innerText = allTodos.filter((todo) => todo.isCompleted == false).length;
-
  }
+
+function handleEdit(event, id, title){
+    let input  = document.createElement("input");
+    input.value = title;
+    let p = event.target;
+    let parent = event.target.parentElement;
+    parent.replaceChild(input, p);
+    input.addEventListener("keyup", (event) => {
+        if(event.keyCode == 13 && event.target.value){
+            let data = {
+                todo: {
+                    title: event.target.value,
+                },
+            };
+            fetch(baseURL + `${id}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              })
+              .then(() => {
+                displayTodo();
+              });
+            event.target.value = "";
+        }
+    });
+}
+
 
 function createUI(arr, rootElm) {
     rootElm.innerHTML = "";
-    arr.forEach((todo, index) => {
+    arr.forEach((todo) => {
         let li = document.createElement("li");
         let input = document.createElement("input");
-        input.name = "checkbox";
         input.type = "checkbox";
-        input.addEventListener("input", handleToggle);
-        input.setAttribute("data-id", index);
+        input.addEventListener("click", () => {
+            handleToggle(todo._id, todo.isCompleted)
+        });
+        input.setAttribute("data-id", todo._id);
         input.id = "checkbox";
         input.checked = todo.isCompleted;
         let p = document.createElement("p");
         p.innerText = todo.title;
+        p.addEventListener("dblclick", (event) => {
+            handleEdit(event, todo._id, todo.title)
+        });
         let span = document.createElement("span");
         span.innerText = "X";
-        span.setAttribute(`data-id`, index);
-        span.addEventListener("click", handleDelete);
+        span.setAttribute(`data-id`, todo._id);
+        span.addEventListener("click", () => {
+            handleDelete(todo._id);
+        });
         li.classList.add("flex");
         li.append(input, p, span);
         rootElm.append(li);
+        controls.style.display = "flex";
+
     });
 }
